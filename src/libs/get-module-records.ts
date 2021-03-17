@@ -8,7 +8,7 @@ import type { Node } from "unist";
 const MIN_VER = "10.0.0";
 
 // https://github.com/nodejs/node/tree/master/doc/api
-const modules = [
+export const modules = [
   "assert",
   "async_hooks",
   "buffer",
@@ -50,7 +50,7 @@ const modules = [
   "worker_threads",
   "zlib",
 ] as const;
-type Module = typeof modules[number];
+export type Module = typeof modules[number];
 
 function assertParsedMetadata(
   meta: string | number | object | null | undefined
