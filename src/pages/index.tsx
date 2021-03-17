@@ -12,7 +12,6 @@ import {
   Th,
   Td,
   Code,
-  Text,
   Select,
   FormControl,
   FormLabel,
