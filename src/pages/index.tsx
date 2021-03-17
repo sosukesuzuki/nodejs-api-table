@@ -15,6 +15,7 @@ import {
   Select,
   FormControl,
   FormLabel,
+  Link,
 } from "@chakra-ui/react";
 import {
   ApiRecord,
@@ -72,26 +73,34 @@ const IndexPage = ({ records }: Props) => {
             <Th>API</Th>
             <Th>Supported</Th>
             <Th>Backported</Th>
+            <Th>URL</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {filteredRecords.map(({ module, api, supported, backported }) => (
-            <Tr key={`${module}${api}`}>
-              <Td>{module}</Td>
-              <Td>
-                <Code>{api}</Code>
-              </Td>
-              <Td>{supported}</Td>
-              <Td>
-                {backported.length === 0
-                  ? ""
-                  : backported.reduce(
-                      (prev, current) => prev + current + ",",
-                      ""
-                    )}
-              </Td>
-            </Tr>
-          ))}
+          {filteredRecords.map(
+            ({ module, api, supported, backported, url }) => (
+              <Tr key={`${module}${api}`}>
+                <Td>{module}</Td>
+                <Td>
+                  <Code>{api}</Code>
+                </Td>
+                <Td>{supported}</Td>
+                <Td>
+                  {backported.length === 0
+                    ? ""
+                    : backported.reduce(
+                        (prev, current) => prev + current + ",",
+                        ""
+                      )}
+                </Td>
+                <Td>
+                  <Link href={url} target="_blank">
+                    {url}
+                  </Link>
+                </Td>
+              </Tr>
+            )
+          )}
         </Tbody>
       </Table>
     </div>

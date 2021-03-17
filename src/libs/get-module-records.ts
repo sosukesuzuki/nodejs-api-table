@@ -86,6 +86,7 @@ export type ApiRecord = {
   api: string;
   supported: string;
   backported: string[];
+  url: string;
 };
 
 function rawMarkdownContentUrl(module: Module) {
@@ -152,10 +153,32 @@ async function getModuleRecord(module: Module): Promise<ApiRecord[]> {
       return;
     }
 
-    data.push({ module, api: maybeApiName, supported, backported });
+    data.push({
+      module,
+      api: maybeApiName,
+      supported,
+      backported,
+      url: getUrl(module, maybeApiName),
+    });
   });
 
   return data;
+}
+
+function getUrl(module: Module, apiName: string): string {
+  return `https://nodejs.org/api/${module}.html#${module}_${getUrlId(apiName)}`;
+}
+
+const notAlphaNumerics = /[^a-z0-9]+/g;
+const edgeUnderscores = /^_+|_+$/g;
+const notAlphaStart = /^[^a-z]/;
+function getUrlId(text: string) {
+  text = text
+    .toLowerCase()
+    .replace(notAlphaNumerics, "_")
+    .replace(edgeUnderscores, "")
+    .replace(notAlphaStart, "_$&");
+  return text;
 }
 
 export async function getModuleRecords(): Promise<ApiRecord[]> {
