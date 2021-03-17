@@ -21,6 +21,7 @@ const modules = [
   "dns",
   "domain",
   "events",
+  "fs",
   "globals",
   "http",
   "http2",
