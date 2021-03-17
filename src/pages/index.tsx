@@ -31,14 +31,12 @@ const IndexPage = ({ records }: Props) => {
   const [moduleFilter, setModuleFilter] = useState<Module | null>(null);
   const filteredRecords = useMemo(
     () =>
-      records.filter((record) => {
-        if (record.module === moduleFilter || !moduleFilter) {
-          return true;
-        }
-        return false;
-      }),
+      moduleFilter
+        ? records.filter((record) => record.module === moduleFilter)
+        : records,
     [records, moduleFilter]
   );
+  console.log({ moduleFilter });
   return (
     <div>
       <Head>
@@ -61,21 +59,25 @@ const IndexPage = ({ records }: Props) => {
             }}
           >
             {modules.map((module) => (
-              <option value={module}>{module}</option>
+              <option value={module} key={module}>
+                {module}
+              </option>
             ))}
           </Select>
         </FormControl>
       </Flex>
-      <Table>
+      <Table size="sm">
         <Thead>
-          <Th>Module</Th>
-          <Th>API</Th>
-          <Th>Supported</Th>
-          <Th>Backported</Th>
+          <Tr>
+            <Th>Module</Th>
+            <Th>API</Th>
+            <Th>Supported</Th>
+            <Th>Backported</Th>
+          </Tr>
         </Thead>
         <Tbody>
           {filteredRecords.map(({ module, api, supported, backported }) => (
-            <Tr key={api}>
+            <Tr key={`${module}${api}`}>
               <Td>{module}</Td>
               <Td>
                 <Code>{api}</Code>

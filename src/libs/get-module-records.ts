@@ -146,8 +146,10 @@ async function getModuleRecord(module: Module): Promise<ApiRecord[]> {
       sortedVersions.length === 1 ? [] : sortedVersions.splice(1, 1);
 
     let maybeApiName: string = (node.children as Node[])[0].value as string;
-    if (maybeApiName === "Class: " || maybeApiName === "Event: ") {
+    if (maybeApiName === "Class: " || maybeApiName === "Static method: ") {
       maybeApiName += (node.children as Node[])[1].value;
+    } else if (maybeApiName === "Event: ") {
+      return;
     }
 
     data.push({ module, api: maybeApiName, supported, backported });
