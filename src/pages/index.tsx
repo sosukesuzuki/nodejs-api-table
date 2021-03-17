@@ -1,7 +1,7 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import { Heading } from "@chakra-ui/react";
-import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Box, Table, Thead, Tbody, Tr, Th, Td, Code } from "@chakra-ui/react";
 import { ApiRecord, getModuleRecords } from "../libs/get-module-records";
 
 type Props = {
@@ -29,9 +29,11 @@ const IndexPage = ({ records }: Props) => (
       </Thead>
       <Tbody>
         {records.map(({ module, api, supported, backported }) => (
-          <Tr>
+          <Tr key={api}>
             <Td>{module}</Td>
-            <Td>{api}</Td>
+            <Td>
+              <Code>{api}</Code>
+            </Td>
             <Td>{supported}</Td>
             <Td>
               {backported.length === 0
