@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier -w .",
-    "lint:*": "run-p lint:*",
+    "lint": "run-p lint:*",
     "lint:prettier": "prettier --check .",
     "lint:tsc": "tsc"
   },
