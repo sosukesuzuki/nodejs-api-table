@@ -36,7 +36,6 @@ const IndexPage = ({ records }: Props) => {
         : records,
     [records, moduleFilter]
   );
-  console.log({ moduleFilter });
   return (
     <div>
       <Head>
