@@ -23,12 +23,14 @@ import {
   modules,
   Module,
 } from "../libs/get-module-records";
+import { getFormattedDate } from "../libs/get-formatted-date";
 
 type Props = {
   records: ApiRecord[];
+  lastFetched: string;
 };
 
-const IndexPage = ({ records }: Props) => {
+const IndexPage = ({ records, lastFetched }: Props) => {
   const [moduleFilter, setModuleFilter] = useState<Module | null>(null);
   const filteredRecords = useMemo(
     () =>
@@ -46,7 +48,7 @@ const IndexPage = ({ records }: Props) => {
       </Head>
       <Box bg="Green" w="100%" p={4} color="white">
         <Heading as="h1" size="2xl">
-          Node.js API Table
+          Node.js API Table (last fetched: {lastFetched})
         </Heading>
       </Box>
       <Flex w="100%" p={4} borderWidth="1px">
@@ -109,7 +111,8 @@ const IndexPage = ({ records }: Props) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const moduleRecords = await getModuleRecords();
-  return { props: { records: moduleRecords } };
+  const lastFetched = getFormattedDate();
+  return { props: { records: moduleRecords, lastFetched } };
 };
 
 export default IndexPage;
