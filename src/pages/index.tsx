@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import { Heading } from "@chakra-ui/react";
 import {
   Box,
   Flex,
+  Heading,
+  Input,
+  SimpleGrid,
   Table,
   Thead,
   Tbody,
@@ -17,6 +19,8 @@ import {
   FormLabel,
   Link,
 } from "@chakra-ui/react";
+import semverCompare from "semver-compare";
+
 import {
   ApiRecord,
   getModuleRecords,
@@ -30,15 +34,28 @@ type Props = {
   lastFetched: string;
 };
 
+type RecordFilter = (record: ApiRecord) => boolean;
+
 const IndexPage = ({ records, lastFetched }: Props) => {
   const [moduleFilter, setModuleFilter] = useState<Module | null>(null);
-  const filteredRecords = useMemo(
-    () =>
-      moduleFilter
-        ? records.filter((record) => record.module === moduleFilter)
-        : records,
-    [records, moduleFilter]
-  );
+  const [minVerFilter, setMinVerFilter] = useState<string | null>(null);
+  const filteredRecords = useMemo(() => {
+    if (!moduleFilter && !minVerFilter) {
+      return records;
+    }
+    const minVer = minVerFilter?.startsWith("v")
+      ? minVerFilter?.slice(1)
+      : minVerFilter;
+    const f: RecordFilter = moduleFilter
+      ? (record) => record.module === moduleFilter
+      : (_) => true;
+    const g: RecordFilter = minVer
+      ? (record) => {
+          return semverCompare(record.supported.slice(1), minVer) >= 0;
+        }
+      : (_) => true;
+    return records.filter((record) => f(record) && g(record));
+  }, [records, moduleFilter, minVerFilter]);
   return (
     <div>
       <Head>
@@ -52,20 +69,34 @@ const IndexPage = ({ records, lastFetched }: Props) => {
         </Heading>
       </Box>
       <Flex w="100%" p={4} borderWidth="1px">
-        <FormControl mw={3}>
-          <FormLabel>Module</FormLabel>
-          <Select
-            placeholder="all"
-            onChange={(e) => {
-              setModuleFilter(e.target.value as Module);
-            }}
-          >
-            {modules.map((module) => (
-              <option value={module} key={module}>
-                {module}
-              </option>
-            ))}
-          </Select>
+        <FormControl mw={2}>
+          <SimpleGrid columns={2} spacing={4}>
+            <Box>
+              <FormLabel>Module</FormLabel>
+              <Select
+                placeholder="all"
+                onChange={(e) => {
+                  setModuleFilter(e.target.value as Module);
+                }}
+              >
+                {modules.map((module) => (
+                  <option value={module} key={module}>
+                    {module}
+                  </option>
+                ))}
+              </Select>
+            </Box>
+            <Box>
+              <FormLabel>
+                Minimum SUPPORTED: E.g.) v16, v16.5, v16.5.0
+              </FormLabel>
+              <Input
+                onChange={(e) => {
+                  setMinVerFilter(e.target.value);
+                }}
+              />
+            </Box>
+          </SimpleGrid>
         </FormControl>
       </Flex>
       <Table size="sm">
