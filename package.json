@@ -10,8 +10,7 @@
     "lint": "run-p lint:*",
     "lint:prettier": "prettier --check .",
     "lint:tsc": "tsc",
-    "netlify:deploy": "netlify deploy --dir=out --prod",
-    "netlify:link": "netlify link"
+    "netlify:deploy": "netlify deploy --dir=out --prod"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.3.4",
